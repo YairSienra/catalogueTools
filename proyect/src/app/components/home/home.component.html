@@ -1,0 +1,128 @@
+
+<div class="contenedor-boton">
+  <button class="boton" mat-raised-button (click)="dueno()">Soy Dueno</button>
+  <button class="boton" mat-raised-button (click)="cliente()">Soy Cliente</button>
+  </div>
+<div class="contenedor" *ngIf="soyDueno">
+  <input type="text"  [(ngModel)]="producto.nombre" placeholder="Nombre del producto">
+  <input type="number"  [(ngModel)]="producto.stock" placeholder="Stock del producto">
+  <input type="text"  [(ngModel)]="producto.claves" placeholder="Palabras claves">
+  <input type="number" *ngIf="soyDueno" [(ngModel)]="producto.precio" placeholder="Precio del producto">
+  <button  mat-raised-button (click)="agregarProducto()">Agregar</button>
+</div>
+
+<div class="contenedor">
+  <table>
+    <thead>
+      <tr>
+        <th>
+          Numero:
+        </th>
+        <th>
+          Nombre Del Producto:
+        </th>
+        <th>
+          Stock:
+        </th>
+        <th>
+          Palabras Claves:
+        </th>
+        <th>
+          Precio:
+        </th>
+        <th >
+          Acciones:
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Importante -->
+      <tr *ngFor="let lista of listaDeProductos; let indice = index">
+        <td>
+          {{indice+1}}
+        </td>
+        <td>
+          {{lista.nombre}}
+        </td>
+        <td [style.color]="lista.stock?'black' : 'red'">
+          {{lista.stock}}
+        </td>
+        <td>
+          <div *ngFor="let claves of listaDeProductos[indice].claves; let i = index">
+            {{i+1}} - {{claves}}
+          </div>
+        </td>
+        <td>
+          ${{lista.precio}}
+        </td>
+        <td>
+          <button mat-raised-button *ngIf="soyDueno" (click)="borrarProducto(indice)">Borrar</button>
+          <input *ngIf="soyCliente && !soyDueno" type="number" [(ngModel)]="lista.numeroDescontar"
+            [style.background]="lista.numeroDescontar < 0?'red' : 'white'"
+          >
+          <button [disabled]="lista.stock === 0" *ngIf="soyCliente && !soyDueno" (click)="tomarElementos(lista)">Anadir a Cesta</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+      <div class="total" *ngIf="total && !soyDueno">
+           TOTAL : ${{total}}
+      </div>
+<!---------------------------------------------------------------------------------------------------------->
+
+<div *ngIf="listaDeProductos">
+  <table *ngIf="soyDueno">
+    <thead>
+      <tr>
+        <th>
+          Numero:
+        </th>
+        <th>
+          Nombre Del Producto:
+        </th>
+        <th>
+          Stock:
+        </th>
+        <th>
+          Palabras Claves:
+        </th>
+        <th>
+          Precio:
+        </th>
+        <th>
+          Acciones:
+        </th>
+      </tr>
+    </thead>
+    <tbody >
+      <!-- Importante -->
+      <tr *ngFor="let producto of listaDeProductos; let indice = index">
+        <td>
+          {{indice+1}}
+        </td>
+        <td>
+          {{producto.nombre}}
+        </td>
+        <td>
+          ${{producto.stock}}
+        </td>
+        <td>
+          <div *ngFor="let claves of producto.claves; let i = index">
+            <button mat-raised-button *ngIf="soyDueno" (click)="borrarClaves(indice, i)">x</button>
+            {{i+1}} - {{claves}}
+          </div>
+
+        </td>
+        <td>
+            {{producto.precio}}
+        </td>
+        <td>
+          <input type="Claves" [(ngModel)]="producto.claveAgregar">
+          <button mat-raised-button *ngIf="soyDueno" (click)="modificarClaves()">Modificar Claves</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
